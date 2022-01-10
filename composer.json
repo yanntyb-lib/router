@@ -1,0 +1,20 @@
+{
+    "name": "yanntyb/router",
+    "description": "router",
+    "autoload": {
+        "psr-4": {
+            "Yanntyb\\Router\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yanntyb\\Router\\Test\\": "test/"
+        }
+    },
+    "authors": [
+        {
+            "name": "yann tyb",
+            "email": "yanntyb.lbc@gmail.com"
+        }
+    ]
+}

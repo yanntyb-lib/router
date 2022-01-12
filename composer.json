@@ -6,6 +6,7 @@
             "Yanntyb\\Router\\": "src/"
         }
     },
+    "version": "1.0.1",
     "autoload-dev": {
         "psr-4": {
             "Yanntyb\\Router\\Test\\": "test/"

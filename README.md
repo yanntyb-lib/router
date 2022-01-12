@@ -1,8 +1,8 @@
 # router
 
-$router = new Router(new Route("users", "/",[UserController::class,"showPage"]));
+$router = new Router(new Route("users", "/",[UserController::class,"showPage"]),true);
 
-$router->addRoute("articles","/article",[ArticleController::class, "showPage"]);
+To call a methode with parameter juste surround the exact name of the variable with {}
+$router->addRoute("articles","/article/{id}",[ArticleController::class, "showArticleById"]);
 
-$query = str_replace("/index.php","",$_SERVER['PHP_SELF']);
-$router->handleQuery($query);
+$router->handleQuery();

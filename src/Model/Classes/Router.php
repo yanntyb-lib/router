@@ -13,11 +13,22 @@ class Router
     private array $routes = [];
     private Route $defaultRoute;
 
-    public function __construct(Route $defaultRoute){
+    public function __construct(Route $defaultRoute, bool $htaccess = false){
         $this->defaultRoute = $defaultRoute;
+        if($htaccess){
+            $conf = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/.confRouter");
+            if($conf !== "true"){
+                $path = $_SERVER["DOCUMENT_ROOT"] . "/.htaccess";
+                $content = file_get_contents($path);
+                $content .= "RewriteEngine on\nRewriteCond  %{REQUEST_FILENAME} !-f\nRewriteCond  %{REQUEST_FILENAME} !-d\nRewriteRule  .* index.php";
+                file_put_contents($path,$content);
+
+                file_put_contents($_SERVER["DOCUMENT_ROOT"] . "/.confRouter", "true");
+            }
+        }
     }
 
-    public function getRouteCollection(): array{
+    private function getRouteCollection(): array{
         return $this->getRoutes();
     }
 
@@ -45,7 +56,7 @@ class Router
      * @return Route|null
      * @throws RouteNotFoundException
      */
-    public function getRoute(string $name): Route{
+    private function getRoute(string $name): Route{
         if(!$this->has($name)){
             throw new RouteNotFoundException();
         }
@@ -56,7 +67,7 @@ class Router
      * @param string $path
      * @return Route
      */
-    public function matchPath(string $path): Route{
+    private function matchPath(string $path): Route{
         foreach ($this->getRoutes() as $route) {
             if($route->test($path)){
                 return $route;
@@ -70,7 +81,7 @@ class Router
      * @return false|mixed
      * @throws ReflectionException
      */
-    public function call(string $path){
+    private function call(string $path){
         return $this->matchPath($path)->call($path);
     }
 
@@ -78,16 +89,17 @@ class Router
      * @param string $name
      * @return bool
      */
-    public function has(string $name): bool{
+    private function has(string $name): bool{
         return isset($this->getRoutes()[$name]);
     }
 
-    public function getRoutes(): array
+    private function getRoutes(): array
     {
         return $this->routes;
     }
 
-    public function handleQuery(string $query){
+    public function handleQuery(){
+        $query = str_replace("/index.php","",$_SERVER['REQUEST_URI']);
         $this->matchPath($query)->call($query);
     }
 }

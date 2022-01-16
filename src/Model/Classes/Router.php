@@ -34,33 +34,6 @@ class Router
 
     /**
      * @param string $name
-     * @param string $path
-     * @param callable|array $callable
-     * @param string|null $pathBeforeAccessingRoute
-     * @return $this
-     * @throws ReflectionException
-     * @throws RouteAlreadyExisteException
-     * @throws RouteBeforeAccessingNotExist
-     */
-    public function addRoute(string $name, string $path, callable|array $callable, string $pathBeforeAccessingRoute = null): self
-    {
-        if($pathBeforeAccessingRoute){
-            if(!$this->matchPath($pathBeforeAccessingRoute)){
-                throw new RouteBeforeAccessingNotExist();
-            }
-        }
-        $route = new Route($name,$path,$callable, $pathBeforeAccessingRoute);
-
-        if($this->has($route->getName())){
-            throw new RouteAlreadyExisteException();
-        }
-
-        $this->routes[$route->getName()] = $route;
-        return $this;
-    }
-
-    /**
-     * @param string $name
      * @return Route
      * @throws RouteNotFoundException
      */
@@ -85,7 +58,11 @@ class Router
                         foreach($this->getRoutes() as $routeBefore){
                             if($routeBefore->test($route->getPathBeforeAccessingRouteName())){
                                 if(!$routeBefore->call($routeBefore->getPath())){
-                                    return $routeBefore;
+                                    foreach($this->getRoutes() as $defaultsRouteIfRouteBeforeReturnFalse){
+                                        if($defaultsRouteIfRouteBeforeReturnFalse->test($route->getPathIfRouteBeforeAccessingReturnFalse())){
+                                            return $defaultsRouteIfRouteBeforeReturnFalse;
+                                        }
+                                    }
                                 }
 
                             }
@@ -119,6 +96,42 @@ class Router
     private function getRoutes(): array
     {
         return $this->routes;
+    }
+
+    /**
+     * @param string $name
+     * @param string $path
+     * @param callable|array $callable
+     * @param string|null $pathBeforeAccessingRoute
+     * @return $this
+     * @throws ReflectionException
+     * @throws RouteAlreadyExisteException
+     * @throws RouteNotFoundException
+     */
+    public function addRoute(string $name, string $path, callable|array $callable, string $pathBeforeAccessingRoute = null, string $pathIfRouteBeforeAccessingReturnFalse = null): self
+    {
+        if($pathBeforeAccessingRoute){
+            if(!$this->matchPath($pathBeforeAccessingRoute)){
+                throw new RouteNotFoundException();
+            }
+            if(!$pathIfRouteBeforeAccessingReturnFalse){
+                throw new RouteNotFoundException();
+            }
+            else{
+                if(!$this->matchPath($pathIfRouteBeforeAccessingReturnFalse)){
+                    throw new RouteNotFoundException();
+                }
+            }
+        }
+
+        $route = new Route($name,$path,$callable, $pathBeforeAccessingRoute, $pathIfRouteBeforeAccessingReturnFalse);
+
+        if($this->has($route->getName())){
+            throw new RouteAlreadyExisteException();
+        }
+
+        $this->routes[$route->getName()] = $route;
+        return $this;
     }
 
     public function handleQuery(){

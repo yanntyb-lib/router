@@ -12,6 +12,7 @@ class Route
     private string $name;
     private string $path;
     private string|null $pathBeforeAccessingRouteName;
+    private string|null $pathIfRouteBeforeAccessingReturnFalse;
 
     /**
      * @var array|callable
@@ -23,13 +24,15 @@ class Route
      * @param string $path
      * @param array|callable $callable
      * @param string|null $pathBeforeAccessingRouteName
+     * @param null $pathIfRouteBeforeAccessingReturnFalse
      */
-    public function __construct(string $name, string $path, callable|array $callable, string $pathBeforeAccessingRouteName = null)
+    public function __construct(string $name, string $path, callable|array $callable, string $pathBeforeAccessingRouteName = null, $pathIfRouteBeforeAccessingReturnFalse = null)
     {
         $this->name = $name;
         $this->path = $path;
         $this->callable = $callable;
         $this->pathBeforeAccessingRouteName = $pathBeforeAccessingRouteName;
+        $this->pathIfRouteBeforeAccessingReturnFalse = $pathIfRouteBeforeAccessingReturnFalse;
     }
 
     /**
@@ -104,16 +107,14 @@ class Route
         return $this->pathBeforeAccessingRouteName;
     }
 
-    /**
-     * @param string|null $pathBeforeAccessingRouteName
-     * @return self
-     */
-    public function setPathBeforeAccessingRouteName(?string $pathBeforeAccessingRouteName): self
-    {
-        $this->pathBeforeAccessingRouteName = $pathBeforeAccessingRouteName;
-        return $this;
-    }
 
+    /**
+     * @return string|null
+     */
+    public function getPathIfRouteBeforeAccessingReturnFalse(): ?string
+    {
+        return $this->pathIfRouteBeforeAccessingReturnFalse;
+    }
 
 
 }

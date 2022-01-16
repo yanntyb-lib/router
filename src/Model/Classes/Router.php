@@ -4,6 +4,7 @@ namespace Yanntyb\Router\Model\Classes;
 
 use JetBrains\PhpStorm\Pure;
 use ReflectionException;
+use ReflectionGenerator;
 
 class Router
 {
@@ -28,22 +29,6 @@ class Router
         }
     }
 
-    private function getRouteCollection(): array{
-        return $this->getRoutes();
-    }
-
-    /**
-     * @param string $name
-     * @return Route
-     * @throws RouteNotFoundException
-     */
-    private function getRoute(string $name): Route{
-        if(!$this->has($name)){
-            throw new RouteNotFoundException();
-        }
-        return $this->getRoutes()[$name];
-    }
-
     /**
      * @param string $path
      * @param bool $testPath
@@ -51,15 +36,24 @@ class Router
      * @throws ReflectionException
      */
     private function matchPath(string $path,bool $testPath = false): Route{
+        //Parcoure toutes les routes
         foreach ($this->getRoutes() as $route) {
+            //Trouve la route correspondant au path
             if($route->test($path)){
+                //Si matchPath est appelé par handleQuery alors on a besoin d'appeler la route précédent la principale
                 if($testPath){
+                    //Si la route a une route précédente alors on va chercher celle-ci
                     if($route->getPathBeforeAccessingRouteName()){
                         foreach($this->getRoutes() as $routeBefore){
+                            //Trouve la route
                             if($routeBefore->test($route->getPathBeforeAccessingRouteName())){
-                                if(!$routeBefore->call($routeBefore->getPath())){
+                                //Si le call de la route précédent la principale ne retourne pas true alors on va chercher la route définie pour ce cas
+                                if(!$routeBefore->call()){
                                     foreach($this->getRoutes() as $defaultsRouteIfRouteBeforeReturnFalse){
+                                        //Trouve la route
                                         if($defaultsRouteIfRouteBeforeReturnFalse->test($route->getPathIfRouteBeforeAccessingReturnFalse())){
+                                            //TODO check if $defaultsRouteIfRouteBeforeReturnFalse->call() return a bool
+                                            var_dump((new ReflectionGenerator($defaultsRouteIfRouteBeforeReturnFalse->call()))->getFunction());
                                             return $defaultsRouteIfRouteBeforeReturnFalse;
                                         }
                                     }
@@ -75,15 +69,6 @@ class Router
         return $this->defaultRoute;
     }
 
-    /**
-     * @param string $path
-     * @return false|mixed
-     * @throws ReflectionException
-     */
-    private function call(string $path): mixed
-    {
-        return $this->matchPath($path)->call($path);
-    }
 
     /**
      * @param string $name

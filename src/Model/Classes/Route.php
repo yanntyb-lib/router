@@ -59,16 +59,15 @@ class Route
     }
 
     /**
-     * @param string $path
      * @return false|mixed
      * @throws ReflectionException
      */
-    public function call(string $path): mixed
+    public function call(): mixed
     {
         $pattern = str_replace("/","\/", $this->getPath());
         $pattern = sprintf("/^%s$/",$pattern);
         $pattern = preg_replace("/(\{\w+\})/", "(.+)", $pattern);
-        preg_match($pattern, $path, $matches);
+        preg_match($pattern, $this->path, $matches);
         preg_match_all("/\{(\w+)\}/", $this->getPath(), $paramMatches);
         array_shift($matches);
         $parameters = $paramMatches[1];

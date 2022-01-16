@@ -59,6 +59,9 @@ class Router
                                     return $defaultsRouteIfRouteBeforeReturnFalse;
                                 }
                             }
+                            else{
+                                return $this->defaultRoute;
+                            }
                         }
                     }
                 }

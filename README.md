@@ -16,5 +16,6 @@ $router->addRoute("admin connection", "/admin/co", [AdminController::class, "con
 $router->addRoute("admin check connection", "/admin/checklog", [AdminController::class, "checkLog"]);<br>
 $router->addRoute("admin page", "/admin/home", [AdminController::class, "home"], "/admin/checklog","/admin/co");<br>
 
+If last parameter is empty then if the route to check return false the default route of the Router will be called
 
 $router->handleQuery();

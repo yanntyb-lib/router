@@ -44,21 +44,20 @@ class Router
                 if($testPath){
                     //Si la route a une route précédente alors on va chercher celle-ci
                     if($route->getPathBeforeAccessingRouteName()){
-                        foreach($this->getRoutes() as $routeBefore){
-                            //Trouve la route
-                            if($routeBefore->test($route->getPathBeforeAccessingRouteName())){
-                                //Si le call de la route précédent la principale ne retourne pas true alors on va chercher la route définie pour ce cas
-                                if(!$routeBefore->call()){
-                                    foreach($this->getRoutes() as $defaultsRouteIfRouteBeforeReturnFalse){
-                                        //Trouve la route
-                                        if($defaultsRouteIfRouteBeforeReturnFalse->test($route->getPathIfRouteBeforeAccessingReturnFalse())){
-                                            //TODO check if $defaultsRouteIfRouteBeforeReturnFalse->call() return a bool
-                                            var_dump((new ReflectionGenerator($defaultsRouteIfRouteBeforeReturnFalse->call()))->getFunction());
-                                            return $defaultsRouteIfRouteBeforeReturnFalse;
-                                        }
-                                    }
+                        //Trouve la route
+                        $routeBeforeAccessingMainRoute = $this->matchPath($route->getPathBeforeAccessingRouteName());
+                        //Si la route trouver est bien celle cherché et pas la defaultRoute;
+                        if($route->getPathBeforeAccessingRouteName() === $routeBeforeAccessingMainRoute->getPath()){
+                            //Si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
+                            if(!$routeBeforeAccessingMainRoute->call()) {
+                                //Trouve la route
+                                $defaultsRouteIfRouteBeforeReturnFalse = $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
+                                //Si la route trouvé est bien celle cherchée et pas la defaultRoute
+                                if ($route->getPathIfRouteBeforeAccessingReturnFalse() === $defaultsRouteIfRouteBeforeReturnFalse->getPath()) {
+                                    //TODO check if $defaultsRouteIfRouteBeforeReturnFalse->call() return a bool
+                                    var_dump((new ReflectionGenerator($defaultsRouteIfRouteBeforeReturnFalse->call()))->getFunction());
+                                    return $defaultsRouteIfRouteBeforeReturnFalse;
                                 }
-
                             }
                         }
                     }
@@ -88,6 +87,7 @@ class Router
      * @param string $path
      * @param callable|array $callable
      * @param string|null $pathBeforeAccessingRoute
+     * @param string|null $pathIfRouteBeforeAccessingReturnFalse
      * @return $this
      * @throws ReflectionException
      * @throws RouteAlreadyExisteException

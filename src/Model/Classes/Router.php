@@ -51,16 +51,18 @@ class Router
                             //Si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
                             if(!$routeBeforeAccessingMainRoute->call()) {
                                 //Trouve la route
-                                $defaultsRouteIfRouteBeforeReturnFalse = $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
-                                //Si la route trouvé est bien celle cherchée et pas la defaultRoute
-                                if ($route->getPathIfRouteBeforeAccessingReturnFalse() === $defaultsRouteIfRouteBeforeReturnFalse->getPath()) {
-                                    //TODO check if $defaultsRouteIfRouteBeforeReturnFalse->call() return a bool
-                                    var_dump((new ReflectionGenerator($defaultsRouteIfRouteBeforeReturnFalse->call()))->getFunction());
-                                    return $defaultsRouteIfRouteBeforeReturnFalse;
+                                if ($route->getPathIfRouteBeforeAccessingReturnFalse()) {
+                                    $defaultsRouteIfRouteBeforeReturnFalse = $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
+                                    //Si la route trouvé est bien celle cherchée et pas la defaultRoute
+                                    if ($route->getPathIfRouteBeforeAccessingReturnFalse() === $defaultsRouteIfRouteBeforeReturnFalse->getPath()) {
+                                        //TODO check if $defaultsRouteIfRouteBeforeReturnFalse->call() return a bool
+                                        var_dump((new ReflectionGenerator($defaultsRouteIfRouteBeforeReturnFalse->call()))->getFunction());
+                                        return $defaultsRouteIfRouteBeforeReturnFalse;
+                                    }
                                 }
-                            }
-                            else{
-                                return $this->defaultRoute;
+                                else{
+                                    return $this->defaultRoute;
+                                }
                             }
                         }
                     }
@@ -102,10 +104,7 @@ class Router
             if(!$this->matchPath($pathBeforeAccessingRoute)){
                 throw new RouteNotFoundException();
             }
-            if(!$pathIfRouteBeforeAccessingReturnFalse){
-                throw new RouteNotFoundException();
-            }
-            else{
+            if($pathIfRouteBeforeAccessingReturnFalse){
                 if(!$this->matchPath($pathIfRouteBeforeAccessingReturnFalse)){
                     throw new RouteNotFoundException();
                 }

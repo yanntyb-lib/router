@@ -6,12 +6,8 @@
             "Yanntyb\\Router\\": "src/"
         }
     },
-    "version": "1.0.3",
-    "autoload-dev": {
-        "psr-4": {
-            "Yanntyb\\Router\\Test\\": "test/"
-        }
-    },
+    "version": "1.0.4",
+
     "authors": [
         {
             "name": "yann tyb",

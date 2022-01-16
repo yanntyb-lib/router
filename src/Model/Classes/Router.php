@@ -48,6 +48,9 @@ class Router
                         $routeBeforeAccessingMainRoute = $this->matchPath($route->getPathBeforeAccessingRouteName());
                         //Si la route trouver est bien celle cherché et pas la defaultRoute;
                         if($route->getPathBeforeAccessingRouteName() === $routeBeforeAccessingMainRoute->getPath()){
+
+                            //TODO check if $routeBeforeAccessingMainRoute->call() return a bool
+                            //var_dump((new ReflectionGenerator($routeBeforeAccessingMainRoute->call()))->getFunction());
                             //Si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
                             if(!$routeBeforeAccessingMainRoute->call()) {
                                 //Trouve la route
@@ -55,8 +58,7 @@ class Router
                                     $defaultsRouteIfRouteBeforeReturnFalse = $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
                                     //Si la route trouvé est bien celle cherchée et pas la defaultRoute
                                     if ($route->getPathIfRouteBeforeAccessingReturnFalse() === $defaultsRouteIfRouteBeforeReturnFalse->getPath()) {
-                                        //TODO check if $defaultsRouteIfRouteBeforeReturnFalse->call() return a bool
-                                        var_dump((new ReflectionGenerator($defaultsRouteIfRouteBeforeReturnFalse->call()))->getFunction());
+
                                         return $defaultsRouteIfRouteBeforeReturnFalse;
                                     }
                                 }

@@ -50,9 +50,10 @@ class Router
                         if($route->getPathBeforeAccessingRouteName() === $routeBeforeAccessingMainRoute->getPath()){
 
                             //TODO check if $routeBeforeAccessingMainRoute->call() return a bool
-                            //var_dump((new ReflectionGenerator($routeBeforeAccessingMainRoute->call()))->getFunction());
+                            $callback = $routeBeforeAccessingMainRoute->call($routeBeforeAccessingMainRoute->getPath());
+                            var_dump((new ReflectionGenerator($callback))->getFunction());
                             //Si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
-                            if(!$routeBeforeAccessingMainRoute->call()) {
+                            if(!$routeBeforeAccessingMainRoute->call($routeBeforeAccessingMainRoute->getPath())) {
                                 //Trouve la route
                                 if ($route->getPathIfRouteBeforeAccessingReturnFalse()) {
                                     $defaultsRouteIfRouteBeforeReturnFalse = $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());

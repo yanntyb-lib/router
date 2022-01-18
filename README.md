@@ -28,5 +28,5 @@ $router->setAccessDeniedRoutesAJAX(Route);<br>
 $router->setAccessDeniedRoutesDOM(Route);<br>
 
 To modifie route not found page :<br>
-$router->setDefaultRouteDOM(Route);
+$router->setDefaultRouteDOM(Route);<br>
 $router->setDefaultRouteAJAX(Route);

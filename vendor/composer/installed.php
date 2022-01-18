@@ -1,7 +1,7 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.5',
-        'version' => '1.0.5.0',
+        'pretty_version' => '1.0.6',
+        'version' => '1.0.6.0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -10,15 +10,13 @@
         'dev' => true,
     ),
     'versions' => array(
-        'joseph-lenton/php-error' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
+        'symfony/polyfill-ctype' => array(
+            'pretty_version' => 'v1.24.0',
+            'version' => '1.24.0.0',
             'type' => 'library',
-            'install_path' => __DIR__ . '/../joseph-lenton/php-error',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
-            'reference' => '08d5aacda02352ca72198e3f5161d83338e26389',
+            'install_path' => __DIR__ . '/../symfony/polyfill-ctype',
+            'aliases' => array(),
+            'reference' => '30885182c981ab175d4d034db0f6f469898070ab',
             'dev_requirement' => false,
         ),
         'symfony/polyfill-mbstring' => array(
@@ -39,9 +37,29 @@
             'reference' => '41e46f64084a205459a862751158ce2190bd5cb5',
             'dev_requirement' => false,
         ),
+        'twig/twig' => array(
+            'pretty_version' => 'v3.3.7',
+            'version' => '3.3.7.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../twig/twig',
+            'aliases' => array(),
+            'reference' => '8f168c6ffa3ce76d1786b3cd52275424a3fc675b',
+            'dev_requirement' => false,
+        ),
+        'yanntyb/controller' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../yanntyb/controller',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'reference' => '9ad1ad1f568d070f869ca85ef6f163bfd13ca68b',
+            'dev_requirement' => false,
+        ),
         'yanntyb/router' => array(
-            'pretty_version' => '1.0.5',
-            'version' => '1.0.5.0',
+            'pretty_version' => '1.0.6',
+            'version' => '1.0.6.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

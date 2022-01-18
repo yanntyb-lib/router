@@ -13,5 +13,15 @@
             "name": "yann tyb",
             "email": "yanntyb.lbc@gmail.com"
         }
+    ],
+    "require": {
+        "yanntyb/controller": "dev-main",
+        "symfony/var-dumper": "^6.0"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:yanntyb-lib/controller.git"
+        }
     ]
 }

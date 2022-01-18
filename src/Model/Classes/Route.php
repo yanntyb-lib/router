@@ -24,7 +24,6 @@ class Route
      * @param string $name
      * @param string $path
      * @param array|callable $callable
-     * @param string|null $pathBeforeAccessingRouteName
      */
     public function __construct(string $name, string $path, callable|array $callable)
     {

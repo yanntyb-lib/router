@@ -16,7 +16,9 @@ $router->addRoute("admin page", "/admin/home", [AdminController::class, "home"])
 
 If the route to check return false then 403 will be return except if u use ->defaultRoute then it will call this last one
 
-Route are not accessible from an ajax call, To reverse it and only make it accessible from ajax:
+Route are not accessible from an ajax call, To reverse it and only make it accessible from ajax:<br>
+To make this work, this.req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');<br>
+I recommande you tu use a moderne js framework or to use my lib AjaxMaker<br>
 
 $router->addRoute("ajax route", "/foo", [ApiController::class, "foo"])->isAjax();
 

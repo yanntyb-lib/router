@@ -7,6 +7,9 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Yanntyb\\Router\\' => array($baseDir . '/src'),
+    'Yanntyb\\Controller\\' => array($vendorDir . '/yanntyb/controller/src'),
+    'Twig\\' => array($vendorDir . '/twig/twig/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
+    'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Symfony\\Component\\VarDumper\\' => array($vendorDir . '/symfony/var-dumper'),
 );

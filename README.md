@@ -10,7 +10,9 @@ To add a route to check (the route need to return a bool) before accesing the ro
 
 $router->addRoute("admin connection", "/admin/connection", [AdminController::class, "connect"]);<br>
 $router->addRoute("admin check connection", "/admin/checklog", [AdminController::class, "checkLog"]);<br>
-$router->addRoute("admin page", "/admin/home", [AdminController::class, "home"])->routeToCheck("/admin/checklog")->defaultRoute("/admin/connection");<br>
+$router->addRoute("admin page", "/admin/home", [AdminController::class, "home"])<br>
+        ->routeToCheck("/admin/checklog")<br>
+        ->defaultRoute("/admin/connection");<br>
 
 If the route to check return false then 403 will be return except if u use ->defaultRoute then it will call this last one
 

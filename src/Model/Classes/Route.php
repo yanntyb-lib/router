@@ -11,28 +11,27 @@ class Route
 {
     private string $name;
     private string $path;
-    private string|null $pathBeforeAccessingRouteName;
+    private string|null $pathBeforeAccessingRouteName = null;
     private string|null $pathIfRouteBeforeAccessingReturnFalse;
 
     /**
      * @var array|callable
      */
     private $callable;
+    private bool $ajax = false;
 
     /**
      * @param string $name
      * @param string $path
      * @param array|callable $callable
      * @param string|null $pathBeforeAccessingRouteName
-     * @param null $pathIfRouteBeforeAccessingReturnFalse
      */
-    public function __construct(string $name, string $path, callable|array $callable, string $pathBeforeAccessingRouteName = null, $pathIfRouteBeforeAccessingReturnFalse = null)
+    public function __construct(string $name, string $path, callable|array $callable)
     {
         $this->name = $name;
         $this->path = $path;
         $this->callable = $callable;
-        $this->pathBeforeAccessingRouteName = $pathBeforeAccessingRouteName;
-        $this->pathIfRouteBeforeAccessingReturnFalse = $pathIfRouteBeforeAccessingReturnFalse;
+        $this->pathIfRouteBeforeAccessingReturnFalse = "/403/DOM";
     }
 
     /**
@@ -115,5 +114,29 @@ class Route
         return $this->pathIfRouteBeforeAccessingReturnFalse;
     }
 
+    public function isAjax(){
+        $this->ajax = true;
+        $this->pathIfRouteBeforeAccessingReturnFalse = "/403/AJAX";
+    }
+
+    public function getAjax(): bool
+    {
+        return $this->ajax;
+    }
+
+    /**
+     * Change $pathBeforeAccessingRouteName
+     * @return $this
+     */
+    public function routeToCheck(string $path): self
+    {
+        $this->pathBeforeAccessingRouteName = $path;
+        return $this;
+    }
+
+    public function defaultRoute(string $path): self{
+        $this->pathIfRouteBeforeAccessingReturnFalse = $path;
+        return $this;
+    }
 
 }

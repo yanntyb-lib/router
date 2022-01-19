@@ -72,7 +72,6 @@ class Router
 
     }
 
-
     /**
      * Return true if router already have a route named like $name
      * @param string $name
@@ -82,6 +81,10 @@ class Router
         return isset($this->getRoutes()[$name]);
     }
 
+    /**
+     * Return Routes
+     * @return Route[]
+     */
     private function getRoutes(): array
     {
         return $this->routes;
@@ -119,35 +122,76 @@ class Router
         $this->matchPath($query, true)->call($query);
     }
 
-
+    /**
+     * Check if router is called from AJAX of not
+     * @return bool
+     */
     protected function isXmlHttpRequest(): bool{
         $header = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? null;
         return ($header === 'XMLHttpRequest');
     }
 
-
-    public function setAccessDeniedRoutesDOM(callable|array $callable){
+    /**
+     * Modify access denied route from dom
+     * @param callable|array $callable
+     * @return Router
+     */
+    public function setAccessDeniedRoutesDOM(callable|array $callable): self
+    {
         $this->modifyRoute("403 DOM", "/403/DOM", $callable);
+        return $this;
     }
 
-    public function setAccessDeniedRoutesAJAX(callable|array $callable){
+    /**
+     * Modify access denied route from ajax
+     * @param callable|array $callable
+     * @return $this
+     */
+    public function setAccessDeniedRoutesAJAX(callable|array $callable): self{
         $this->modifyRoute("403 AJAX", "/403/AJAX", $callable);
+        return $this;
     }
 
-    public function setDefaultRouteDOM(callable|array $callable){
+    /**
+     * Modify route not found from dom
+     * @param callable|array $callable
+     * @return Router
+     */
+    public function setDefaultRouteDOM(callable|array $callable): self{
         $this->modifyRoute("404 DOM", "/404/DOM", $callable);
+        return $this;
     }
 
-    public function setDefaultRouteAJAX(callable|array $callable){
+    /**
+     * Modify route not found from ajax
+     * @param callable|array $callable
+     * @return $this
+     */
+    public function setDefaultRouteAJAX(callable|array $callable): self{
         $this->modifyRoute("404 AJAX", "/404/AJAX", $callable);
+        return $this;
     }
 
+    /**
+     * Generic fonction to modify a route
+     * @param string $name
+     * @param string $path
+     * @param callable|array $callable
+     * @return void
+     */
     private function modifyRoute(string $name, string $path, callable|array $callable){
         $this->routes[$name] = new Route($name, $path, $callable);
     }
 
 
-    private function errorDOMTemplate(int $errorCode, string $message){
+    /**
+     * Default DOM error templates
+     * @param int $errorCode
+     * @param string $message
+     * @return string
+     */
+    private function errorDOMTemplate(int $errorCode, string $message): string
+    {
         return '<!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -166,6 +210,11 @@ class Router
                ';
     }
 
+    /**
+     * Init all default route (403 404)
+     * @return void
+     * @throws RouteAlreadyExisteException
+     */
     private function initDefaultRoutes(){
         /**
          * Access denied default routes

@@ -15,8 +15,6 @@
         }
     ],
     "require": {
-        "yanntyb/controller": "dev-main",
-        "symfony/var-dumper": "^6.0"
     },
     "repositories": [
         {

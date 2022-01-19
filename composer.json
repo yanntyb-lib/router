@@ -13,13 +13,5 @@
             "name": "yann tyb",
             "email": "yanntyb.lbc@gmail.com"
         }
-    ],
-    "require": {
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:yanntyb-lib/controller.git"
-        }
     ]
 }

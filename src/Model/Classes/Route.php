@@ -19,6 +19,7 @@ class Route
      */
     private $callable;
     private bool $ajax = false;
+    private bool $checkHeader = true;
 
     /**
      * @param string $name
@@ -92,7 +93,6 @@ class Route
         if(is_array($callable)){
             $callable = [new $callable[0](), $callable[1]];
         }
-
         return call_user_func_array($callable, $argsValue);
     }
 
@@ -113,9 +113,15 @@ class Route
         return $this->pathIfRouteBeforeAccessingReturnFalse;
     }
 
-    public function isAjax(){
+    /**
+     * Make Route only accessible with AJAX call
+     * @return $this
+     */
+    public function isAjax(): self
+    {
         $this->ajax = true;
         $this->pathIfRouteBeforeAccessingReturnFalse = "/403/AJAX";
+        return $this;
     }
 
     public function getAjax(): bool
@@ -136,6 +142,15 @@ class Route
     public function defaultRoute(string $path): self{
         $this->pathIfRouteBeforeAccessingReturnFalse = $path;
         return $this;
+    }
+
+    public function noCheckHeader(): self{
+        $this->checkHeader = false;
+        return $this;
+    }
+
+    public function getCheckHeader(): bool{
+        return $this->checkHeader;
     }
 
 }

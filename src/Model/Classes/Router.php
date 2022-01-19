@@ -38,7 +38,7 @@ class Router
         foreach ($this->getRoutes() as $route) {
             //Trouve la route correspondant au path
             if($route->test($path)){
-                if($this->isXmlHttpRequest()){
+                if($this->isXmlHttpRequest() && $route->getCheckHeader()){
                     if(!$route->getAjax()){
                         return $this->routes["403 AJAX"];
                     }
@@ -51,12 +51,13 @@ class Router
                 //Si matchPath est appelé par handleQuery alors on a besoin d'appeler la route précédent la principale
                 if($testPath){
                     //Si la route a une route précédente alors on va chercher celle-ci
-                    if($route->getPathBeforeAccessingRouteName() !== null){
+                    if($route->getPathBeforeAccessingRouteName()){
                         //Trouve la route
                         $routeBeforeAccessingMainRoute = $this->matchPath($route->getPathBeforeAccessingRouteName());
                         //Si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
                         if(!$routeBeforeAccessingMainRoute->call($routeBeforeAccessingMainRoute->getPath())) {
                             //Trouve la route
+
                             return $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
                         }
                     }
@@ -169,10 +170,9 @@ class Router
         /**
          * Access denied default routes
          */
-
         $this->addRoute("403 DOM", "/403/DOM", function() {echo $this->errorDOMTemplate(403,"NOT THIS TIME, ACCESS FORBIDDEN!");});
-        $this->addRoute("403 AJAX", "/403/AJAX", function() {echo json_encode(["error" => "403 access denied"]);});
+        $this->addRoute("403 AJAX", "/403/AJAX", function() {echo json_encode(["error" => "403 access forbidden"]);})->isAjax();
         $this->addRoute("404 DOM", "/404/DOM", function() {echo $this->errorDOMTemplate(404, "NOT FOUND");});
-        $this->addRoute("404 AJAX", "/404/AJAX", function() {echo json_encode(["error" => "404 not found"]);});
+        $this->addRoute("404 AJAX", "/404/AJAX", function() {echo json_encode(["error" => "404 not found"]);})->isAjax();
     }
 }

@@ -20,7 +20,11 @@ Route are not accessible from an ajax call, To reverse it and only make it acces
 To make this work, this.req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');<br>
 I recommande you tu use a moderne js framework or to use my lib AjaxMaker<br>
 
-$router->addRoute("ajax route", "/foo", [ApiController::class, "foo"])->isAjax();
+$router->addRoute("ajax route", "/foo", [ApiController::class, "foo"])->isAjax();<br>
+
+To make a Route both accessible from AJAX or not:<br><br>
+$router->addRoute("admin check connection", "/admin/checklog", [AdminController::class, "checkLog"])->noCheckHeader();<br>
+$router->addRoute("ajax route", "/foo", [ApiController::class, "foo"])->isAjax()->routeToCheck("/admin/check");<br>
 
 To handle the router in the navigator:
 

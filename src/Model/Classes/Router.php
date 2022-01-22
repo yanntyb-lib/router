@@ -53,6 +53,23 @@ class Router
                 }
                 //Si matchPath est appelé par handleQuery alors on a besoin d'appeler la route précédent la principale
                 if($testPath){
+
+                    //Si il ya une route a acceder directement apres la route return cette route
+                    if($route->getPathThen()){
+                        $routeThen = $this->matchPath($route->getPathThen());
+
+                        //Si les deux paths ne correspondent pas on throw
+
+                        dump($route);
+                        dump($routeThen);
+
+                        if($route->getPathThen() !== $routeThen->getPath()){
+                            throw new RouteNotFoundException($route->getPathThen(), " ( path then after " . $route->getPath() . " )");
+                        }
+                        //Retourne la route
+                        return $routeThen;
+                    }
+
                     //Si la route a une route précédente alors on va chercher celle-ci
                     if($route->getPathBeforeAccessingRouteName()){
                         //Trouve la route
@@ -62,17 +79,7 @@ class Router
                             throw new RouteNotFoundException($route->getPathBeforeAccessingRouteName(), " ( path routeToCheck after " . $route->getPath() . " )");
                         }
 
-                        //Si il ya une route a acceder directement apres la routeBeforeAccessing return cette route
-                        if($route->getPathThen()){
-                            $routeThen = $this->matchPath($route->getPathThen());
 
-                            //Si les deux paths ne correspondent pas on throw
-                            if($route->getPathThen() !== $routeThen->getPath()){
-                                throw new RouteNotFoundException($route->getPathThen(), " ( path then after " . $route->getPath() . " )");
-                            }
-                            //Retourne la route
-                            return $routeThen;
-                        }
 
                         //Sinon si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
                         if(!$routeBeforeAccessingMainRoute->call($routeBeforeAccessingMainRoute->getPath())) {

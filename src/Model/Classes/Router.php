@@ -93,7 +93,7 @@ class Router
                             //Si le call de la route de permission ne retourne pas true alors l'accès est restrain
                             if(!$permRoute->call($permRoute->getPath())){
                                 //Si une route de permission restrainte est spécifié alors on va la retourné
-                                if($permission->denied !== ""){
+                                if($permission["denied"] !== ""){
                                     return $this->matchPath($permission["denied"]);
                                 }
                                 //Sinon on retourne les routes par default d'erreur 403

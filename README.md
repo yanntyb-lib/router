@@ -43,27 +43,35 @@ To modifie route not found page :<br>
 $router->setDefaultRouteDOM(Route);<br>
 $router->setDefaultRouteAJAX(Route);
 
+To make a groupe of route need to check a route 
+
 
 ```mermaid
-graph LR
+graph TD
         A["$router = new Router()"] --> B{"$router->addRoute(<br>$name,<br> $path,<br> [Controller::class, 'methode name']<br>OR<br>callable<br>)"}
         A --> H["Modify default template"] --> I["->setAccessDeniedRoutesAJAX($path_to_route)"]
+
+        T["check groupe permission"] --> U["path = /admin/route<br>If groupe is definied whith base path /admin<br>It will check $route_to_check before accessing the route<br>If this last one return true, then we can access to route<br>If not then 403 error is return or Route with $permission_denied_path"] --> V["handle url"] --> G["$router->handleQuerry"]
+
+
+        B --> routeToCheck --> C["->routeToCheck($path_of_route)"] --> T
+        B --> onlyAjax --> D["->isAjax()"] --> T
+        B --> eitherAjaxOrNot --> E["->noCheckHeader()"] --> T
+        B --> T
+        B --> P["path groupe permission"]
         
-        B --> routeToCheck --> C["->routeToCheck($path_of_route)"] --> G["$router->handleQuerry"]
-        B --> onlyAjax --> D["->isAjax()"] --> G["$router->handleQuerry"]
-        B --> eitherAjaxOrNot --> E["->noCheckHeader()"] --> G["$router->handleQuerry"]
-        B --> N
+        C --> routeToCheckReturnFalse --> F["->defaultRoute($path_to_route)"]
         
-        C --> routeToCheckReturnFalse --> F["->defaultRoute($path_to_route)"] --> G["$router->handleQuerry"]
+        F --> M["defaultAccessDeniedRoute"]
         
-        F --> defaultAccessDeniedRoute --> M
-        
-        M["Not Ajax"] --> DOMAccessDeniedTemplate --> N
-        M["Ajax"] --> ajaxAccessDeniedTemplate --> N
+        M --> R["Not Ajax"] --> DOMAccessDeniedTemplate --> T
+        M --> S["Ajax"] --> ajaxAccessDeniedTemplate --> T
         
         H --> J["->setAccessDeniedRoutesDOM($path_to_route)"]
         H --> K["->setDefaultRouteDOM($path_to_route)"]
         H --> L["->setDefaultRouteAJAX($path_to_route)"]
         
-        N["handleUrl"] --> G["$router->handleQuerry"]
+       
+        P --> Q["$router->makeGroupedPermission(<br>$base_route_path,<br>$route_to_check_path,<br>$permission_denied_path<br> OR<br> nothing if you want to use default 403 error)"]
+
 ```

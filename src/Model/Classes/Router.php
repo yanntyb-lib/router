@@ -10,6 +10,7 @@ class Router
      * @var Route[]
      */
     private array $routes = [];
+    private array $permissions = [];
 
     public function __construct(bool $htaccess = true){
         if($htaccess){
@@ -28,6 +29,7 @@ class Router
     }
 
     /**
+     * Return Route matching path
      * @param string $path
      * @param bool $testPath
      * @return Route
@@ -81,6 +83,32 @@ class Router
 
                     }
                 }
+                //Si on a pas spécifé le fait de que la route n'est pas dans un groupe alors on va check les permission de ce groupe
+                if($route->needGlobalPermission()){
+                    //On parcoure toute les permissions
+                    foreach($this->getPermissions() as $permission){
+                        //Si le path d'une permission match avec le path de notre route alors on va chercher la route correspondante au premier path
+                        if(str_contains($route->getPath(),$permission["path"])){
+                            $permRoute = $this->matchPath($permission["route"]);
+                            //Si le call de la route de permission ne retourne pas true alors l'accès est restrain
+                            if(!$permRoute->call($permRoute->getPath())){
+                                //Si une route de permission restrainte est spécifié alors on va la retourné
+                                if($permission->denied !== ""){
+                                    return $this->matchPath($permission["denied"]);
+                                }
+                                //Sinon on retourne les routes par default d'erreur 403
+                                if($this->isXmlHttpRequest()){
+                                    return $this->routes["403 AJAX"];
+                                }
+                                else{
+                                    return $this->routes["403 DOM"];
+                                }
+                            }
+                            return $route;
+                        }
+                    }
+                }
+
                 return $route;
             }
         }
@@ -203,7 +231,6 @@ class Router
         $this->routes[$name] = new Route($name, $path, $callable);
     }
 
-
     /**
      * Default DOM error templates
      * @param int $errorCode
@@ -232,10 +259,11 @@ class Router
 
     /**
      * Init all default route (403 404)
-     * @return void
+     * @return Router
      * @throws RouteAlreadyExisteException
      */
-    private function initDefaultRoutes(){
+    protected function initDefaultRoutes(): self
+    {
         /**
          * Access denied default routes
          */
@@ -243,5 +271,30 @@ class Router
         $this->addRoute("403 AJAX", "/403/AJAX", function() {echo json_encode(["error" => "403 access forbidden"]);})->isAjax();
         $this->addRoute("404 DOM", "/404/DOM", function() {echo $this->errorDOMTemplate(404, "NOT FOUND");});
         $this->addRoute("404 AJAX", "/404/AJAX", function() {echo json_encode(["error" => "404 not found"]);})->isAjax();
+        return $this;
+    }
+
+    /**
+     * Make a groupe of route needing an other route permission before calling them
+     * @param string $basePath
+     * @param string $routeToCheck
+     * @return Router
+     */
+    public function makeGroupedPermission(string $basePath, string $routeToCheck, string $permissionDeniedRoute = ""): self
+    {
+        $this->permissions[] = [
+            "path" => $basePath,
+            "route" => $routeToCheck,
+            "denied" => $permissionDeniedRoute
+        ];
+        return $this;
+    }
+
+    /**
+     * Get permissions array
+     * @return array
+     */
+    protected function getPermissions(): array{
+        return $this->permissions;
     }
 }

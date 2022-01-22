@@ -19,6 +19,7 @@ class Route
 
     private bool $ajax = false;
     private bool $checkHeader = true;
+    private bool $groupePermission = true;
 
 
     /**
@@ -151,7 +152,7 @@ class Route
      * Change $pathBeforeAccessingRouteName
      * @return $this
      */
-    public function routeToCheck(string $path): self
+    public function needPermission(string $path): self
     {
         $this->pathBeforeAccessingRouteName = $path;
         return $this;
@@ -178,6 +179,16 @@ class Route
      */
     public function then(string $path) :self{
         $this->pathThen = $path;
+        return $this;
+    }
+
+    public function needGlobalPermission(): bool
+    {
+        return $this->groupePermission;
+    }
+
+    public function noPermission(): self{
+        $this->groupePermission = false;
         return $this;
     }
 

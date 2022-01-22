@@ -42,3 +42,28 @@ $router->setAccessDeniedRoutesDOM(Route);<br>
 To modifie route not found page :<br>
 $router->setDefaultRouteDOM(Route);<br>
 $router->setDefaultRouteAJAX(Route);
+
+
+```mermaid
+graph LR
+        A["$router = new Router()"] --> B{"$router->addRoute(<br>$name,<br> $path,<br> [Controller::class, 'methode name']<br>OR<br>callable<br>)"}
+        A --> H["Modify default template"] --> I["->setAccessDeniedRoutesAJAX($path_to_route)"]
+        
+        B --> routeToCheck --> C["->routeToCheck($path_of_route)"] --> G["$router->handleQuerry"]
+        B --> onlyAjax --> D["->isAjax()"] --> G["$router->handleQuerry"]
+        B --> eitherAjaxOrNot --> E["->noCheckHeader()"] --> G["$router->handleQuerry"]
+        B --> N
+        
+        C --> routeToCheckReturnFalse --> F["->defaultRoute($path_to_route)"] --> G["$router->handleQuerry"]
+        
+        F --> defaultAccessDeniedRoute --> M
+        
+        M["Not Ajax"] --> DOMAccessDeniedTemplate --> N
+        M["Ajax"] --> ajaxAccessDeniedTemplate --> N
+        
+        H --> J["->setAccessDeniedRoutesDOM($path_to_route)"]
+        H --> K["->setDefaultRouteDOM($path_to_route)"]
+        H --> L["->setDefaultRouteAJAX($path_to_route)"]
+        
+        N["handleUrl"] --> G["$router->handleQuerry"]
+```

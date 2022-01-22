@@ -11,15 +11,15 @@ class Route
 {
     private string $name;
     private string $path;
+    private $callable;
+
     private string|null $pathBeforeAccessingRouteName = null;
     private string|null $pathIfRouteBeforeAccessingReturnFalse;
+    private string|null $pathThen = null;
 
-    /**
-     * @var array|callable
-     */
-    private $callable;
     private bool $ajax = false;
     private bool $checkHeader = true;
+
 
     /**
      * @param string $name
@@ -104,6 +104,13 @@ class Route
         return $this->pathBeforeAccessingRouteName;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getPathThen(): ?string
+    {
+        return $this->pathThen;
+    }
 
     /**
      * @return string|null
@@ -151,6 +158,16 @@ class Route
 
     public function getCheckHeader(): bool{
         return $this->checkHeader;
+    }
+
+    /**
+     * Set path to be called after calling $this->>path
+     * @param string $path
+     * @return $this
+     */
+    public function then(string $path) :self{
+        $this->pathThen = $path;
+        return $this;
     }
 
 }

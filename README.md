@@ -26,6 +26,10 @@ To make a Route both accessible from AJAX or not:<br><br>
 $router->addRoute("admin check connection", "/admin/checklog", [AdminController::class, "checkLog"])->noCheckHeader();<br>
 $router->addRoute("ajax route", "/foo", [ApiController::class, "foo"])->isAjax()->routeToCheck("/admin/check");<br>
 
+To set a Route to be access directly after Route call if it return true:<br>
+$router->addRoute("check formulaire post data","/admin/post/checkData", [AdminController::class, "checkPostData"])->then("/admin/post/showData");<br>
+$router->addRoute("afficher post data", "/admin/post/showData", [AdminController::class, "showData"]);<br>
+
 To handle the router in the navigator:
 
 $router->handleQuery();

@@ -32,6 +32,7 @@ class Router
      * @param bool $testPath
      * @return Route
      * @throws ReflectionException
+     * @throws RouteNotFoundException
      */
     private function matchPath(string $path,bool $testPath = false): Route{
         //Parcoure toutes les routes
@@ -54,11 +55,26 @@ class Router
                     if($route->getPathBeforeAccessingRouteName()){
                         //Trouve la route
                         $routeBeforeAccessingMainRoute = $this->matchPath($route->getPathBeforeAccessingRouteName());
+                        //Si les deux paths ne correspondent pas on throw
+                        if($route->getPathBeforeAccessingRouteName() !== $routeBeforeAccessingMainRoute->getPath()){
+                            throw new RouteNotFoundException($route->getPathBeforeAccessingRouteName(), " ( path routeToCheck after " . $route->getPath() . " )");
+                        }
                         //Si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
                         if(!$routeBeforeAccessingMainRoute->call($routeBeforeAccessingMainRoute->getPath())) {
-                            //Trouve la route
-
+                            //retourne la route
                             return $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
+                        }
+
+                        //Si il ya une route a acceder apres la routeBeforeAccessing return cette route
+                        if($route->getPathThen()){
+                            $routeThen = $this->matchPath($route->getPathThen());
+
+                            //Si les deux paths ne correspondent pas on throw
+                            if($route->getPathThen() !== $routeThen->getPath()){
+                                throw new RouteNotFoundException($route->getPathThen(), " ( path then after " . $route->getPath() . " )");
+                            }
+                            //Retourne la route
+                            return $routeThen;
                         }
                     }
                 }

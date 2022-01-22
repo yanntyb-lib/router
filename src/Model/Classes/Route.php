@@ -59,7 +59,8 @@ class Route
 
     /**
      * @return false|mixed
-     * @throws ReflectionException
+     * @throws ClassNotFound
+     * @throws MethodeNotFound
      */
     public function call($path): mixed
     {
@@ -76,10 +77,20 @@ class Route
         if(count($parameters) > 0){
             $parameters = array_combine($parameters, $matches);
             if(is_array($this->callable)){
-                $reflectionFunc = (new ReflectionClass($this->callable[0]))->getMethod($this->callable[1]);
+                try{
+                    $reflectionFunc = (new ReflectionClass($this->callable[0]))->getMethod($this->callable[1]);
+                }
+                catch(ReflectionException $e){
+                    throw new ClassNotFound($this->callable[0],$this->getPath());
+                }
             }
             else{
-                $reflectionFunc = new ReflectionFunction($this->callable);
+                try{
+                    $reflectionFunc = new ReflectionFunction($this->callable);
+                }
+                catch(ReflectionException $e){
+                    throw new MethodeNotFound($this->getPath());
+                }
             }
 
             $args = array_map(fn (ReflectionParameter $params) => $params->getName(), $reflectionFunc->getParameters());

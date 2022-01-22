@@ -31,8 +31,8 @@ class Router
      * @param string $path
      * @param bool $testPath
      * @return Route
-     * @throws ReflectionException
      * @throws RouteNotFoundException
+     * @throws MethodeNotFound|ClassNotFound
      */
     private function matchPath(string $path,bool $testPath = false): Route{
         //Parcoure toutes les routes
@@ -120,7 +120,7 @@ class Router
         $route = new Route($name,$path,$callable);
 
         if($this->has($route->getName())){
-            throw new RouteAlreadyExisteException();
+            throw new RouteAlreadyExisteException($route->getName());
         }
 
         $this->routes[$route->getName()] = $route;
@@ -130,7 +130,8 @@ class Router
     /**
      * Call the route matching url path
      * @return void
-     * @throws ReflectionException
+     * @throws ClassNotFound
+     * @throws MethodeNotFound|RouteNotFoundException
      */
     public function handleQuery()
     {

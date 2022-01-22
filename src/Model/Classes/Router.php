@@ -54,20 +54,11 @@ class Router
                 //Si matchPath est appelé par handleQuery alors on a besoin d'appeler la route précédent la principale
                 if($testPath){
 
-                    //Si il ya une route a acceder directement apres la route return cette route
-                    if($route->getPathThen()){
-                        $routeThen = $this->matchPath($route->getPathThen());
 
-                        //Si les deux paths ne correspondent pas on throw
-                        if($route->getPathThen() !== $routeThen->getPath()){
-                            throw new RouteNotFoundException($route->getPathThen(), " ( path then after " . $route->getPath() . " )");
-                        }
-                        //Retourne la route
-                        return $routeThen;
-                    }
 
                     //Si la route a une route précédente alors on va chercher celle-ci
                     if($route->getPathBeforeAccessingRouteName()){
+
                         //Trouve la route
                         $routeBeforeAccessingMainRoute = $this->matchPath($route->getPathBeforeAccessingRouteName());
                         //Si les deux paths ne correspondent pas on throw
@@ -84,6 +75,20 @@ class Router
                         }
 
 
+                    }
+
+                    //Si il ya une route a acceder directement apres la route return cette route
+                    if($route->getPathThen()){
+                        $routeThen = $this->matchPath($route->getPathThen());
+
+                        //Si les deux paths ne correspondent pas on throw
+                        if($route->getPathThen() !== $routeThen->getPath()){
+                            throw new RouteNotFoundException($route->getPathThen(), " ( path then after " . $route->getPath() . " )");
+                        }
+                        //On appel le call de la route et ensuite on retourne la route then
+                        $route->call($route->getPath());
+                        //Retourne la route
+                        return $routeThen;
                     }
                 }
                 //Si on a pas spécifé le fait de que la route n'est pas dans un groupe alors on va check les permission de ce groupe

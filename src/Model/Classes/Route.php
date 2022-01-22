@@ -187,7 +187,7 @@ class Route
         return $this->groupePermission;
     }
 
-    public function noPermission(): self{
+    public function noGroupePermission(): self{
         $this->groupePermission = false;
         return $this;
     }

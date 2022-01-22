@@ -59,13 +59,8 @@ class Router
                         if($route->getPathBeforeAccessingRouteName() !== $routeBeforeAccessingMainRoute->getPath()){
                             throw new RouteNotFoundException($route->getPathBeforeAccessingRouteName(), " ( path routeToCheck after " . $route->getPath() . " )");
                         }
-                        //Si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
-                        if(!$routeBeforeAccessingMainRoute->call($routeBeforeAccessingMainRoute->getPath())) {
-                            //retourne la route
-                            return $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
-                        }
 
-                        //Si il ya une route a acceder apres la routeBeforeAccessing return cette route
+                        //Si il ya une route a acceder directement apres la routeBeforeAccessing return cette route
                         if($route->getPathThen()){
                             $routeThen = $this->matchPath($route->getPathThen());
 
@@ -76,6 +71,14 @@ class Router
                             //Retourne la route
                             return $routeThen;
                         }
+
+                        //Sinon si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
+                        if(!$routeBeforeAccessingMainRoute->call($routeBeforeAccessingMainRoute->getPath())) {
+                            //retourne la route
+                            return $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
+                        }
+
+
                     }
                 }
                 return $route;

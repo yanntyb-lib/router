@@ -58,7 +58,6 @@ graph TD
         B --> onlyAjax --> D["->isAjax()"] --> T
         B --> eitherAjaxOrNot --> E["->noCheckHeader()"] --> T
         B --> T
-        B --> P["path groupe permission"]
         
         C --> routeToCheckReturnFalse --> F["->defaultRoute($path_to_route)"]
         
@@ -72,6 +71,6 @@ graph TD
         H --> L["->setDefaultRouteAJAX($path_to_route)"]
         
        
-        P --> Q["$router->makeGroupedPermission(<br>$base_route_path,<br>$route_to_check_path,<br>$permission_denied_path<br> OR<br> nothing if you want to use default 403 error)"]
+        A --> X["groupe permission"] --> Q["$router->makeGroupedPermission(<br>$base_route_path,<br>$route_to_check_path,<br>$permission_denied_path<br> OR<br> nothing if you want to use default 403 error)"]
 
 ```

@@ -59,10 +59,6 @@ class Router
                         $routeThen = $this->matchPath($route->getPathThen());
 
                         //Si les deux paths ne correspondent pas on throw
-
-                        dump($route);
-                        dump($routeThen);
-
                         if($route->getPathThen() !== $routeThen->getPath()){
                             throw new RouteNotFoundException($route->getPathThen(), " ( path then after " . $route->getPath() . " )");
                         }

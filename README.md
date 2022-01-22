@@ -52,7 +52,7 @@ graph TD
         A --> H["Modify default template"] --> I["->setAccessDeniedRoutesAJAX($path_to_route)"]
 
         T["check groupe permission"] --> U["path = /admin/route<br>If groupe is definied whith base path /admin<br>It will check $route_to_check before accessing the route<br>If this last one return true, then we can access to route<br>If not then 403 error is return or Route with $permission_denied_path"] --> V["handle url"] --> G["$router->handleQuerry"]
-
+        T --> W["->noPermission()"] --> V
 
         B --> routeToCheck --> C["->routeToCheck($path_of_route)"] --> T
         B --> onlyAjax --> D["->isAjax()"] --> T

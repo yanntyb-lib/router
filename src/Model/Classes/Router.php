@@ -53,9 +53,6 @@ class Router
                 }
                 //Si matchPath est appelé par handleQuery alors on a besoin d'appeler la route précédent la principale
                 if($testPath){
-
-
-                    dump($route);
                     //Si la route a une route précédente alors on va chercher celle-ci
                     if($route->getPathBeforeAccessingRouteName()){
                         //Trouve la route
@@ -65,17 +62,12 @@ class Router
                             throw new RouteNotFoundException($route->getPathBeforeAccessingRouteName(), " ( path routeToCheck after " . $route->getPath() . " )");
                         }
 
-
-
                         //Sinon si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
                         if(!$routeBeforeAccessingMainRoute->call($routeBeforeAccessingMainRoute->getPath())) {
                             //retourne la route
                             return $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
                         }
-
-
                     }
-
                     //Si il ya une route a acceder directement apres la route return cette route
                     if($route->getPathThen()){
                         $routeThen = $this->matchPath($route->getPathThen());

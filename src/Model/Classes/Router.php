@@ -55,10 +55,9 @@ class Router
                 if($testPath){
 
 
-
+                    dump($route);
                     //Si la route a une route précédente alors on va chercher celle-ci
                     if($route->getPathBeforeAccessingRouteName()){
-
                         //Trouve la route
                         $routeBeforeAccessingMainRoute = $this->matchPath($route->getPathBeforeAccessingRouteName());
                         //Si les deux paths ne correspondent pas on throw
@@ -81,10 +80,6 @@ class Router
                     if($route->getPathThen()){
                         $routeThen = $this->matchPath($route->getPathThen());
 
-                        //Si les deux paths ne correspondent pas on throw
-                        if($route->getPathThen() !== $routeThen->getPath()){
-                            throw new RouteNotFoundException($route->getPathThen(), " ( path then after " . $route->getPath() . " )");
-                        }
                         //On appel le call de la route et ensuite on retourne la route then
                         $route->call($route->getPath());
                         //Retourne la route

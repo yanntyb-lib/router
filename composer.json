@@ -6,12 +6,16 @@
             "Yanntyb\\Router\\": "src/"
         }
     },
-    "version": "1.0.20",
+    "version": "1.0.21",
 
     "authors": [
         {
             "name": "yann tyb",
             "email": "yanntyb.lbc@gmail.com"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpdocumentor/phpdocumentor": "2.*",
+    },
+    "minimum-stability": "dev"
 }

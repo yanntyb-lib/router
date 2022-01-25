@@ -30,6 +30,7 @@ To set a Route to be access directly after Route call and not taking care about 
 $router->addRoute("check formulaire post data","/admin/post/checkData", [AdminController::class, "checkPostData"])->then("/admin/post/showData");
 $router->addRoute("afficher post data", "/admin/post/showData", [AdminController::class, "showData"])->routeToCheck("/admin/post/checkData");
 
+
 To handle the router in the navigator:
 
 $router->handleQuery();

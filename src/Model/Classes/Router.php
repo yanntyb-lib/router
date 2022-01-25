@@ -51,6 +51,16 @@ class Router
                         return $this->routes["403 DOM"];
                     }
                 }
+                if($route->getBeforeCallback()){
+                    foreach($route->getBeforeCallback() as $routeCallback){
+                        $routeCallbackFromMatch = $this->matchPath($routeCallback, false);
+
+                        if($routeCallback === $routeCallbackFromMatch->getPath()){
+                            $routeCallbackFromMatch->call($routeCallbackFromMatch->getPath());
+                        }
+                    }
+                }
+
                 //Si matchPath est appelé par handleQuery alors on a besoin d'appeler la route précédent la principale
                 if($testPath){
                     //Si la route a une route précédente alors on va chercher celle-ci
@@ -103,7 +113,6 @@ class Router
                         }
                     }
                 }
-
                 return $route;
             }
         }

@@ -16,6 +16,7 @@ class Route
     private string|null $pathBeforeAccessingRouteName = null;
     private string|null $pathIfRouteBeforeAccessingReturnFalse;
     private string|null $pathThen = null;
+    private array $directCallback = [];
 
     private bool $ajax = false;
     private bool $checkHeader = true;
@@ -191,5 +192,24 @@ class Route
         $this->groupePermission = false;
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getBeforeCallback(): array
+    {
+        return $this->directCallback;
+    }
+
+    /**
+     * @param string[] $directCallback
+     * @return self
+     */
+    public function setBeforeCallback(array $directCallback): self
+    {
+        $this->directCallback = $directCallback;
+        return $this;
+    }
+
 
 }

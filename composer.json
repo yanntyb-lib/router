@@ -15,7 +15,7 @@
         }
     ],
     "require-dev": {
-        "phpdocumentor/phpdocumentor": "2.*",
+        "phpdocumentor/phpdocumentor": "2.*"
     },
     "minimum-stability": "dev"
 }

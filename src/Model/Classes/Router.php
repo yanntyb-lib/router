@@ -171,7 +171,21 @@ class Router
     public function handleQuery()
     {
         $query = str_replace("/index.php", "", $_SERVER['REQUEST_URI']);
-        $this->matchPath($query, true)->call($query);
+        /**
+         * @var Route $route
+         */
+        $route = $this->matchPath($query, true)->call($query);
+        /**
+         * Direct after callback
+         */
+        if($route->getDirectAfterCallback()){
+            foreach ($route->getDirectAfterCallback() as $after){
+                $routeAfter = $this->matchPath($after);
+                if($routeAfter->getPath() === $after){
+                    $routeAfter->call($routeAfter->getPath());
+                }
+            }
+        }
     }
 
     /**

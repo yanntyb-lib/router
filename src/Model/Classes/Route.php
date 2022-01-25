@@ -16,7 +16,8 @@ class Route
     private string|null $pathBeforeAccessingRouteName = null;
     private string|null $pathIfRouteBeforeAccessingReturnFalse;
     private string|null $pathThen = null;
-    private array $directCallback = [];
+    private array $directBeforeCallback = [];
+    private array $directAfterCallback = [];
 
     private bool $ajax = false;
     private bool $checkHeader = true;
@@ -198,7 +199,7 @@ class Route
      */
     public function getBeforeCallback(): array
     {
-        return $this->directCallback;
+        return $this->directBeforeCallback;
     }
 
     /**
@@ -207,7 +208,25 @@ class Route
      */
     public function setBeforeCallback(array $directCallback): self
     {
-        $this->directCallback = $directCallback;
+        $this->directBeforeCallback = $directCallback;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDirectAfterCallback(): array
+    {
+        return $this->directAfterCallback;
+    }
+
+    /**
+     * @param array $directAfterCallback
+     * @return self
+     */
+    public function setAfterCallback(array $directAfterCallback): self
+    {
+        $this->directAfterCallback = $directAfterCallback;
         return $this;
     }
 

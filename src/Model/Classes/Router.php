@@ -39,7 +39,20 @@ class Router
         foreach ($this->getRoutes() as $route) {
             //Trouve la route correspondant au path
             if($route->test($path)){
+
                 if($route->getRequestMethode() && $_SERVER['REQUEST_METHOD'] !== "POST"){
+                    if($this->isXmlHttpRequest()){
+                        if(!$route->getAjax()){
+                            return $this->routes["403 AJAX"];
+                        }
+                    }
+                    else{
+                        if($route->getAjax()){
+                            return $this->routes["403 DOM"];
+                        }
+                    }
+                }
+                else{
                     if($this->isXmlHttpRequest()){
                         if(!$route->getAjax()){
                             return $this->routes["403 AJAX"];

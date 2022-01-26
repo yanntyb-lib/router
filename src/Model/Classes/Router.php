@@ -48,7 +48,7 @@ class Router
                         return $this->routes["403 DOM"];
                     }
                 }
-                else{
+                else if(!$route->getRequestMethode() && ($_SERVER["REQUEST_METHOD"] === "POST")){
                     if($this->isXmlHttpRequest()){
                         if(!$route->getAjax()){
                             return $this->routes["403 AJAX"];

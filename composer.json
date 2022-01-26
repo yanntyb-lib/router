@@ -6,7 +6,7 @@
             "Yanntyb\\Router\\": "src/"
         }
     },
-    "version": "1.0.22",
+    "version": "1.0.23",
 
     "authors": [
         {
@@ -14,8 +14,8 @@
             "email": "yanntyb.lbc@gmail.com"
         }
     ],
-    "require-dev": {
-        "phpdocumentor/phpdocumentor": "2.*"
-    },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "require": {
+        "symfony/var-dumper": "6.1.x-dev"
+    }
 }

@@ -2,8 +2,6 @@
 
 namespace Yanntyb\Router\Model\Classes;
 
-use ReflectionException;
-
 class Router
 {
     /**
@@ -41,6 +39,18 @@ class Router
         foreach ($this->getRoutes() as $route) {
             //Trouve la route correspondant au path
             if($route->test($path)){
+                if($route->getRequestMethode() && $_SERVER['REQUEST_METHOD'] !== "POST"){
+                    if($this->isXmlHttpRequest()){
+                        if(!$route->getAjax()){
+                            return $this->routes["403 AJAX"];
+                        }
+                    }
+                    else{
+                        if($route->getAjax()){
+                            return $this->routes["403 DOM"];
+                        }
+                    }
+                }
                 if($this->isXmlHttpRequest() && $route->getCheckHeader()){
                     if(!$route->getAjax()){
                         return $this->routes["403 AJAX"];
@@ -53,7 +63,7 @@ class Router
                 }
                 if($route->getBeforeCallback()){
                     foreach($route->getBeforeCallback() as $routeCallback){
-                        $routeCallbackFromMatch = $this->matchPath($routeCallback, false);
+                        $routeCallbackFromMatch = $this->matchPath($routeCallback);
 
                         if($routeCallback === $routeCallbackFromMatch->getPath()){
                             $routeCallbackFromMatch->call($routeCallbackFromMatch->getPath());
@@ -175,16 +185,26 @@ class Router
          * @var Route $route
          */
         $route = $this->matchPath($query, true)->call($query);
+        dump($route);
         /**
          * Direct after callback
          */
         if($route->getDirectAfterCallback()){
-            foreach ($route->getDirectAfterCallback() as $after){
-                $routeAfter = $this->matchPath($after);
-                if($routeAfter->getPath() === $after){
+            if(is_array($route->getDirectAfterCallback())){
+                $routeAfter = $this->matchPath($route->getDirectAfterCallback());
+                if($routeAfter->getPath() === $route->getDirectAfterCallback()){
                     $routeAfter->call($routeAfter->getPath());
                 }
             }
+            else{
+                foreach ($route->getDirectAfterCallback() as $after){
+                    $routeAfter = $this->matchPath($after);
+                    if($routeAfter->getPath() === $after){
+                        $routeAfter->call($routeAfter->getPath());
+                    }
+                }
+            }
+
         }
     }
 

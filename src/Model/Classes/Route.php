@@ -16,12 +16,14 @@ class Route
     private string|null $pathBeforeAccessingRouteName = null;
     private string|null $pathIfRouteBeforeAccessingReturnFalse;
     private string|null $pathThen = null;
-    private array $directBeforeCallback = [];
+    private array|string $directBeforeCallback = [];
     private array $directAfterCallback = [];
 
     private bool $ajax = false;
     private bool $checkHeader = true;
     private bool $groupePermission = true;
+
+    private bool $isPost = false;
 
 
     /**
@@ -206,7 +208,7 @@ class Route
      * @param string[] $directCallback
      * @return self
      */
-    public function setBeforeCallback(array $directCallback): self
+    public function setBeforeCallback(array|string $directCallback): self
     {
         $this->directBeforeCallback = $directCallback;
         return $this;
@@ -215,7 +217,7 @@ class Route
     /**
      * @return array
      */
-    public function getDirectAfterCallback(): array
+    public function getDirectAfterCallback(): array|string
     {
         return $this->directAfterCallback;
     }
@@ -227,6 +229,24 @@ class Route
     public function setAfterCallback(array $directAfterCallback): self
     {
         $this->directAfterCallback = $directAfterCallback;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getRequestMethode(): bool
+    {
+        return $this->isPost;
+    }
+
+    /**
+     * @param bool $isPost
+     * @return self
+     */
+    public function isPost(): self
+    {
+        $this->isPost = true;
         return $this;
     }
 

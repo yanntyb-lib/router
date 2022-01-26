@@ -40,16 +40,12 @@ class Router
             //Trouve la route correspondant au path
             if($route->test($path)){
 
-                if($route->getRequestMethode() && $_SERVER['REQUEST_METHOD'] !== "POST"){
+                if($route->getRequestMethode() && ($_SERVER['REQUEST_METHOD'] !== "POST")){
                     if($this->isXmlHttpRequest()){
-                        if(!$route->getAjax()){
-                            return $this->routes["403 AJAX"];
-                        }
+                        return $this->routes["403 AJAX"];
                     }
                     else{
-                        if($route->getAjax()){
-                            return $this->routes["403 DOM"];
-                        }
+                        return $this->routes["403 DOM"];
                     }
                 }
                 else{

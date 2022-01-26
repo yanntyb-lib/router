@@ -185,7 +185,6 @@ class Router
          * @var Route $route
          */
         $route = $this->matchPath($query, true)->call($query);
-        dump($route);
         /**
          * Direct after callback
          */

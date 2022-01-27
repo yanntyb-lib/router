@@ -82,6 +82,32 @@ class Router
 
                 //Si matchPath est appelé par handleQuery alors on a besoin d'appeler la route précédent la principale
                 if($testPath){
+                    //Si on a pas spécifé le fait de que la route n'est pas dans un groupe alors on va check les permission de ce groupe
+                    if($route->needGlobalPermission()){
+                        //On parcoure toute les permissions
+                        foreach($this->getPermissions() as $permission){
+                            //Si le path d'une permission match avec le path de notre route alors on va chercher la route correspondante au premier path
+                            if(str_contains($route->getPath(),$permission["path"])){
+                                $permRoute = $this->matchPath($permission["route"]);
+                                //Si le call de la route de permission ne retourne pas true alors l'accès est restrain
+                                if(!$permRoute->call($permRoute->getPath())){
+                                    //Si une route de permission restrainte est spécifié alors on va la retourné
+                                    if($permission["denied"] !== ""){
+                                        return $this->matchPath($permission["denied"]);
+                                    }
+                                    //Sinon on retourne les routes par default d'erreur 403
+                                    if($this->isXmlHttpRequest()){
+                                        return $this->routes["403 AJAX"];
+                                    }
+                                    else{
+                                        return $this->routes["403 DOM"];
+                                    }
+                                }
+                                return $route;
+                            }
+                        }
+                    }
+
                     //Si la route a une route précédente alors on va chercher celle-ci
                     if($route->getPathBeforeAccessingRouteName()){
                         //Trouve la route
@@ -97,41 +123,8 @@ class Router
                             return $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
                         }
                     }
-                    //Si il ya une route a acceder directement apres la route return cette route
-                    if($route->getPathThen()){
-                        $routeThen = $this->matchPath($route->getPathThen());
+                }
 
-                        //On appel le call de la route et ensuite on retourne la route then
-                        $route->call($route->getPath());
-                        //Retourne la route
-                        return $routeThen;
-                    }
-                }
-                //Si on a pas spécifé le fait de que la route n'est pas dans un groupe alors on va check les permission de ce groupe
-                if($route->needGlobalPermission()){
-                    //On parcoure toute les permissions
-                    foreach($this->getPermissions() as $permission){
-                        //Si le path d'une permission match avec le path de notre route alors on va chercher la route correspondante au premier path
-                        if(str_contains($route->getPath(),$permission["path"])){
-                            $permRoute = $this->matchPath($permission["route"]);
-                            //Si le call de la route de permission ne retourne pas true alors l'accès est restrain
-                            if(!$permRoute->call($permRoute->getPath())){
-                                //Si une route de permission restrainte est spécifié alors on va la retourné
-                                if($permission["denied"] !== ""){
-                                    return $this->matchPath($permission["denied"]);
-                                }
-                                //Sinon on retourne les routes par default d'erreur 403
-                                if($this->isXmlHttpRequest()){
-                                    return $this->routes["403 AJAX"];
-                                }
-                                else{
-                                    return $this->routes["403 DOM"];
-                                }
-                            }
-                            return $route;
-                        }
-                    }
-                }
                 return $route;
             }
         }

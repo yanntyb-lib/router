@@ -193,7 +193,7 @@ class Router
         /**
          * @var Route $route
          */
-        $route = $this->matchPath($query, true)->call($query);
+        $route = $this->matchPath($query, true)->call($query, false);
         /**
          * Direct after callback
          */

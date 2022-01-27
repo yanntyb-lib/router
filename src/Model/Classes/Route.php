@@ -68,7 +68,7 @@ class Route
      * @throws ClassNotFound
      * @throws MethodeNotFound
      */
-    public function call($path): self
+    public function call(string $path, bool $return = true): self
     {
         $pattern = str_replace("/","\/", $this->getPath());
         $pattern = sprintf("/^%s$/",$pattern);
@@ -109,6 +109,9 @@ class Route
         $callable = $this->callable;
         if(is_array($callable)){
             $callable = [new $callable[0](), $callable[1]];
+        }
+        if($return){
+            return call_user_func_array($callable, $argsValue);
         }
         call_user_func_array($callable, $argsValue);
         return $this;

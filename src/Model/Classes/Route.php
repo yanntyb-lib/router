@@ -212,10 +212,10 @@ class Route
     }
 
     /**
-     * @param array $directAfterCallback
+     * @param array|string $directAfterCallback
      * @return self
      */
-    public function setAfterCallback(array $directAfterCallback): self
+    public function setAfterCallback(array|string $directAfterCallback): self
     {
         $this->directAfterCallback = $directAfterCallback;
         return $this;

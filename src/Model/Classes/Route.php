@@ -16,7 +16,7 @@ class Route
     private string|null $pathBeforeAccessingRouteName = null;
     private string|null $pathIfRouteBeforeAccessingReturnFalse;
     private array|string $directBeforeCallback = [];
-    private array $directAfterCallback = [];
+    private array|string $directAfterCallback = [];
 
     private bool $ajax = false;
     private bool $checkHeader = true;

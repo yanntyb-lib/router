@@ -198,7 +198,7 @@ class Router
          * Direct after callback
          */
         if($route->getDirectAfterCallback()){
-            if(is_array($route->getDirectAfterCallback())){
+            if(!is_array($route->getDirectAfterCallback())){
                 $routeAfter = $this->matchPath($route->getDirectAfterCallback());
                 if($routeAfter->getPath() === $route->getDirectAfterCallback()){
                     $routeAfter->call($routeAfter->getPath());

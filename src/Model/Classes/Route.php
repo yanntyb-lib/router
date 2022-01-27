@@ -15,7 +15,6 @@ class Route
 
     private string|null $pathBeforeAccessingRouteName = null;
     private string|null $pathIfRouteBeforeAccessingReturnFalse;
-    private string|null $pathThen = null;
     private array|string $directBeforeCallback = [];
     private array $directAfterCallback = [];
 
@@ -126,13 +125,6 @@ class Route
         return $this->pathBeforeAccessingRouteName;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getPathThen(): ?string
-    {
-        return $this->pathThen;
-    }
 
     /**
      * @return string|null
@@ -182,15 +174,6 @@ class Route
         return $this->checkHeader;
     }
 
-    /**
-     * Set path to be called after calling $this->>path
-     * @param string $path
-     * @return $this
-     */
-    public function then(string $path) :self{
-        $this->pathThen = $path;
-        return $this;
-    }
 
     public function needGlobalPermission(): bool
     {

@@ -63,12 +63,13 @@ class Route
     }
 
     /**
-     * @param $path
+     * @param string $path
+     * @param bool $return
      * @return Route
      * @throws ClassNotFound
      * @throws MethodeNotFound
      */
-    public function call(string $path, bool $return = true): self
+    public function call(string $path, bool $return = true): mixed
     {
         $pattern = str_replace("/","\/", $this->getPath());
         $pattern = sprintf("/^%s$/",$pattern);

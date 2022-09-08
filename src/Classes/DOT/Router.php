@@ -1,11 +1,11 @@
 <?php
 
-namespace Yanntyb\Router\Model\Classes\DOT;
+namespace Yanntyb\Router\Classes\DOT;
 
-use Yanntyb\Router\Model\Classes\Exception\ClassNotFound;
-use Yanntyb\Router\Model\Classes\Exception\MethodeNotFound;
-use Yanntyb\Router\Model\Classes\Exception\RouteAlreadyExisteException;
-use Yanntyb\Router\Model\Classes\Exception\RouteNotFoundException;
+use Yanntyb\Router\Classes\Exception\ClassNotFound;
+use Yanntyb\Router\Classes\Exception\MethodeNotFound;
+use Yanntyb\Router\Classes\Exception\RouteAlreadyExisteException;
+use Yanntyb\Router\Classes\Exception\RouteNotFoundException;
 
 class Router
 {
@@ -40,9 +40,8 @@ class Router
      * @throws MethodeNotFound|ClassNotFound
      */
     private function matchPath(string $path,bool $testPath = false): Route{
-        //Parcoure toutes les routes
         foreach ($this->getRoutes() as $route) {
-            //Trouve la route correspondant au path
+            //If route match given path
             if($route->test($path)){
 
                 if($route->getCheckHeader() && $route->getRequestMethode() && ($_SERVER['REQUEST_METHOD'] !== "POST")){
@@ -85,22 +84,20 @@ class Router
                     }
                 }
 
-                //Si matchPath est appelé par handleQuery alors on a besoin d'appeler la route précédent la principale
+                //If mathode is called from handleQuery then we check if found route need a permission or if a route to be executed before it is specified
                 if($testPath){
-                    //Si on a pas spécifé le fait de que la route n'est pas dans un groupe alors on va check les permission de ce groupe
+                    //If we didnt specifed that the route dont need permission we check all permission to find the matching one
                     if($route->needGlobalPermission()){
-                        //On parcoure toute les permissions
                         foreach($this->getPermissions() as $permission){
-                            //Si le path d'une permission match avec le path de notre route alors on va chercher la route correspondante au premier path
+                            //If permission path match with route path then we find route of this permission to call its callback
                             if(str_contains($route->getPath(),$permission["path"])){
                                 $permRoute = $this->matchPath($permission["route"]);
-                                //Si le call de la route de permission ne retourne pas true alors l'accès est restrain
+                                //If callback of the permission dont return true then it means that the route cant be access
+                                //So the router return permission denied route
                                 if(!$permRoute->call($permRoute->getPath())){
-                                    //Si une route de permission restrainte est spécifié alors on va la retourné
                                     if($permission["denied"] !== ""){
                                         return $this->matchPath($permission["denied"]);
                                     }
-                                    //Sinon on retourne les routes par default d'erreur 403
                                     if($this->isXmlHttpRequest()){
                                         return $this->routes["403 AJAX"];
                                     }
@@ -113,18 +110,17 @@ class Router
                         }
                     }
 
-                    //Si la route a une route précédente alors on va chercher celle-ci
+                    //If route doesnt need permission but have a route than need to be called before it manualy specified
+                    //Then same than permission, we check if a route with specified path match
+                    //If the callback of it doesnt return true then we return the route specified for this case
                     if($route->getPathBeforeAccessingRouteName()){
-                        //Trouve la route
                         $routeBeforeAccessingMainRoute = $this->matchPath($route->getPathBeforeAccessingRouteName());
                         //Si les deux paths ne correspondent pas on throw
                         if($route->getPathBeforeAccessingRouteName() !== $routeBeforeAccessingMainRoute->getPath()){
                             throw new RouteNotFoundException($route->getPathBeforeAccessingRouteName(), " ( path routeToCheck after " . $route->getPath() . " )");
                         }
-
-                        //Sinon si le call de la route trouvé ne retourne pas true alors on va chercher la route définie pour ce cas
                         if(!$routeBeforeAccessingMainRoute->call($routeBeforeAccessingMainRoute->getPath())) {
-                            //retourne la route
+                            //return specified route ( by default route /403/DOM )
                             return $this->matchPath($route->getPathIfRouteBeforeAccessingReturnFalse());
                         }
                     }
@@ -185,32 +181,22 @@ class Router
      * @throws ClassNotFound
      * @throws MethodeNotFound|RouteNotFoundException
      */
-    public function handleQuery()
+    public function handleQuery(): void
     {
         $query = str_replace("/index.php", "", $_SERVER['REQUEST_URI']);
         /**
          * @var Route $route
          */
         $route = $this->matchPath($query, true)->call($query, false);
-        /**
-         * Direct after callback
-         */
+
+        //Then if the route has an after calling callback set we execute it
         if($route->getDirectAfterCallback()){
-            if(!is_array($route->getDirectAfterCallback())){
-                $routeAfter = $this->matchPath($route->getDirectAfterCallback());
-                if($routeAfter->getPath() === $route->getDirectAfterCallback()){
+            foreach ($route->getDirectAfterCallback() as $after){
+                $routeAfter = $this->matchPath($after);
+                if($routeAfter->getPath() === $after){
                     $routeAfter->call($routeAfter->getPath());
                 }
             }
-            else{
-                foreach ($route->getDirectAfterCallback() as $after){
-                    $routeAfter = $this->matchPath($after);
-                    if($routeAfter->getPath() === $after){
-                        $routeAfter->call($routeAfter->getPath());
-                    }
-                }
-            }
-
         }
     }
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace Yanntyb\Router\Model\Classes\DOT;
+namespace Yanntyb\Router\Classes\DOT;
 
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
 use ReflectionParameter;
-use Yanntyb\Router\Model\Classes\Exception\ClassNotFound;
-use Yanntyb\Router\Model\Classes\Exception\MethodeNotFound;
+use Yanntyb\Router\Classes\Exception\ClassNotFound;
+use Yanntyb\Router\Classes\Exception\MethodeNotFound;
 
 class Route
 {
@@ -25,7 +25,6 @@ class Route
     private bool $groupePermission = true;
 
     private bool $isPost = false;
-
 
     /**
      * @param string $name
@@ -219,6 +218,7 @@ class Route
      */
     public function setAfterCallback(array|string $directAfterCallback): self
     {
+        if(is_string($directAfterCallback)) $directAfterCallback = [$directAfterCallback];
         $this->directAfterCallback = $directAfterCallback;
         return $this;
     }

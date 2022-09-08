@@ -1,6 +1,11 @@
 <?php
 
-namespace Yanntyb\Router\Model\Classes;
+namespace Yanntyb\Router\Model\Classes\DOT;
+
+use Yanntyb\Router\Model\Classes\Exception\ClassNotFound;
+use Yanntyb\Router\Model\Classes\Exception\MethodeNotFound;
+use Yanntyb\Router\Model\Classes\Exception\RouteAlreadyExisteException;
+use Yanntyb\Router\Model\Classes\Exception\RouteNotFoundException;
 
 class Router
 {

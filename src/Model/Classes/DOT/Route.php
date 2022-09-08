@@ -1,11 +1,13 @@
 <?php
 
-namespace Yanntyb\Router\Model\Classes;
+namespace Yanntyb\Router\Model\Classes\DOT;
 
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
 use ReflectionParameter;
+use Yanntyb\Router\Model\Classes\Exception\ClassNotFound;
+use Yanntyb\Router\Model\Classes\Exception\MethodeNotFound;
 
 class Route
 {

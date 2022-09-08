@@ -1,6 +1,6 @@
 <?php
 
-namespace Yanntyb\Router\Model\Classes;
+namespace Yanntyb\Router\Model\Classes\Exception;
 
 use Exception;
 
